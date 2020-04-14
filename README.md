@@ -1,3 +1,3 @@
 # MatrixDataType
 
-Dummy C++ datatype that potrays the functionalities of Matrices
+Work with matrices and all its functionailities
