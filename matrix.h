@@ -7,6 +7,12 @@ class Matrix{
 		UINT itsRows, itsCols;
 		std::vector<std::vector<int>> mat;		// 2D vector
 		
+		void setDimension(UINT rows, UINT cols){
+			for(UINT r = 0; r < rows; r++){
+				mat.push_back(std::vector<int>(cols));
+			}
+		}
+		
 	public:
 							//Constructors
 		Matrix(){}
@@ -44,7 +50,7 @@ class Matrix{
 		Matrix operator+(Matrix &rhs){
 			if(itsRows == rhs.itsRows && itsCols == rhs.itsCols){
 				Matrix result;
-				result = rhs;		//To prevent Segmentation Fault error
+				result.setDimension(itsRows, itsCols);
 				for(UINT r = 0; r < itsRows; r++){
 					for(UINT c = 0; c < itsCols; c++){
 						result.mat[r][c] = mat[r][c] + rhs.mat[r][c];					
@@ -59,7 +65,7 @@ class Matrix{
 		Matrix operator-(Matrix &rhs){
 			if(itsRows == rhs.itsRows && itsCols == rhs.itsCols){
 				Matrix result;
-				result = rhs;		//To prevent Segmentation Fault error
+				result.setDimension(itsRows, itsCols);
 				for(UINT r = 0; r < itsRows; r++){
 					for(UINT c = 0; c < itsCols; c++){
 						result.mat[r][c] = mat[r][c] - rhs.mat[r][c];					
@@ -71,6 +77,22 @@ class Matrix{
 			} 
 		}
 		
+		Matrix operator*(Matrix &rhs){
+			if(itsCols == rhs.itsRows){
+				Matrix result;
+				result.setDimension(itsRows, rhs.itsCols);
+				for(UINT i = 0; i < itsRows; i++){
+					for(UINT j = 0; j < rhs.itsCols; j++){
+						for(UINT k = 0; k < itsCols; k++){
+							result.mat[i][j] += mat[i][k]*rhs.mat[k][j];
+						}
+					}
+				}
+				return result;
+			} else {
+				std::cout << "Cannot perform this matrix multiplicatoin.\n";
+			}
+		}
 		
 		/*void dispElements(){
 			for(auto i : mat){
