@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<cmath>
 typedef unsigned int UINT;
 
 class Matrix{
@@ -15,7 +16,7 @@ class Matrix{
 		
 	public:
 							//Constructors
-		Matrix(){}
+		Matrix() : itsRows(0), itsCols(0) {}
 		Matrix(UINT rows, UINT cols) :
 			itsRows(rows), itsCols(cols)
 		{
@@ -49,14 +50,12 @@ class Matrix{
 		
 		Matrix operator+(Matrix &rhs){
 			if(itsRows == rhs.itsRows && itsCols == rhs.itsCols){
-				Matrix result;
-				result.setDimension(itsRows, itsCols);
 				for(UINT r = 0; r < itsRows; r++){
 					for(UINT c = 0; c < itsCols; c++){
-						result.mat[r][c] = mat[r][c] + rhs.mat[r][c];					
+						mat[r][c] = mat[r][c] + rhs.mat[r][c];					
 					}
 				}
-				return result;
+				return *this;
 			} else {
 				std::cout << "Matrices must have same dimensions\n";
 			}
@@ -64,14 +63,12 @@ class Matrix{
 		
 		Matrix operator-(Matrix &rhs){
 			if(itsRows == rhs.itsRows && itsCols == rhs.itsCols){
-				Matrix result;
-				result.setDimension(itsRows, itsCols);
 				for(UINT r = 0; r < itsRows; r++){
 					for(UINT c = 0; c < itsCols; c++){
-						result.mat[r][c] = mat[r][c] - rhs.mat[r][c];					
+						mat[r][c] = mat[r][c] - rhs.mat[r][c];					
 					}
 				}
-				return result;
+				return *this;
 			} else {
 				std::cout << "Matrices must have same dimensions\n";
 			} 
@@ -91,6 +88,46 @@ class Matrix{
 				return result;
 			} else {
 				std::cout << "Cannot perform this matrix multiplicatoin.\n";
+			}
+		}
+		
+		Matrix & operator=(const Matrix &rhs){
+			if(this==&rhs)
+				return *this;
+			if(itsRows == rhs.itsRows && itsCols == rhs.itsCols){
+				for(UINT i = 0; i < itsRows; i++){
+					for(UINT j = 0; j < itsCols; j++){
+						mat[i][j] = rhs.mat[i][j];
+					}
+				}
+				return *this;
+			}
+		}
+		
+		int det(int n){
+			int d = 0;
+			Matrix innerMat;
+			innerMat.setDimension(itsRows, itsCols);
+			if(itsRows == itsCols){
+				if(itsRows == 2){
+					return (mat[0][0]*mat[1][1] - mat[0][1]*mat[1][0]);
+				} else {
+					for(int x = 0; x < n; x++){
+						int subi = 0;
+						for(int i = 1; i < n; i++){
+							int subj = 0;
+							for(int j = 0; j < n; j++){
+								if(j == x)
+								continue;
+								innerMat.mat[subi][subj] = mat[i][j];
+								subj++;
+							}
+							subi++;
+						}
+						d = d + (pow(-1, x) * mat[0][x] * det(n-1));
+					}
+				}
+				return d;
 			}
 		}
 		
